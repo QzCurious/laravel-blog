@@ -124,6 +124,64 @@ _/etc/httpd/conf/httpd.conf_
 
 See also: https://laravel.com/docs/5.8#web-server-configuration
 
+## Basic Routing and Views
+
+### What is Routing
+
+> Routing is the process of parsing a URI and determining
+> the appropriate action to take.
+>
+> --[Building a PHP Framework: Part 8 - Routing](https://dev.to/mattsparks/building-a-php-framework-part-8---routing-4jgf)
+
+### Register a Simple Route
+
+> The routes/web.php file defines routes that are for your web interface.
+>
+> --[Laravel](https://laravel.com/docs/5.8/routing#basic-routing)
+
+```php
+routes/web.php
+--------------
+
+Route::get('/', function () {
+    return view('welcome');
+});
+```
+
+Laravel comes with a route. So that you will see a landing pages
+when you visit / page.
+
+Name of `get()` method is respond to HTTP verb.
+First argument is a uri, and second is the action for the uri.
+
+And there are more:
+
+```php
+Route::get($uri, $callback);
+Route::post($uri, $callback);
+Route::put($uri, $callback);
+Route::patch($uri, $callback);
+Route::delete($uri, $callback);
+Route::options($uri, $callback);
+```
+
+The `view()` function retrieves a view instance by search
+files in _resources/views/_ directory.
+
+Now create a simple route:
+
+```php
+routes/web.php
+--------------
+
+Route::get('/about', function () {
+    return 'About...';
+});
+```
+
+Run `$ php artisan serve` and visit http://localhost:8000/about.
+You should see "About..." on the page.
+
 # Environment
 
 -   php 7.3.3
