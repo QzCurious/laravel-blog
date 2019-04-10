@@ -182,6 +182,48 @@ Route::get('/about', function () {
 Run `$ php artisan serve` and visit http://localhost:8000/about.
 You should see "About..." on the page.
 
+### Create a Simple View
+
+It's not enough to just show a string in a page. We shall write
+html code for our pages. That's what views for. You can just think that
+views are pages, so you write html code in view files. Laravel manages
+views in _resources/views/_ directory. In _resources/views/_ you see
+laravel come with a _welcome.blade.php_ file.
+[**Blade**](https://laravel.com/docs/5.8/blade) is laravel template engine
+for frontend. To create a view for about page, create a new file
+_about.blade.php_ in _resources/views/_. For now, we can just treat it
+as normal html file.
+
+```php
+about.blade.php
+---------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About</title>
+</head>
+<body>
+    <h1>About This Blog</h1>
+</body>
+</html>
+```
+
+Then modify [our route](#register-a-simple-route)
+
+```php
+routes/web.php
+--------------
+
+Route::get('/about', function () {
+    return view('about');
+});
+```
+
+Run `$ php artisan serve` and visit http://localhost:8000/about.
+You should see our html is rendered.
+
 # Environment
 
 -   php 7.3.3
