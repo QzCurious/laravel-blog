@@ -245,6 +245,16 @@ _You can also checkout this by `$ git show make-auth` in this repo._
 
 Now your app is ready for registration and authentication. Just that easy!
 
+## Create Migration and Model for Posts
+
+### Make Migration with Artisan
+
+`php artisan make:migration create_posts_table --create=posts`
+
+-   Artisan creates a new migration file placed in **database/migratoins** for us
+-   Option **--create** set name of table to be created.
+-   `php artisan help make:migration` to learn more.
+
 # Environment
 
 -   php 7.3.3
