@@ -255,6 +255,31 @@ Now your app is ready for registration and authentication. Just that easy!
 -   Option **--create** set name of table to be created.
 -   `php artisan help make:migration` to learn more.
 
+### Migration Basics
+
+> A migration class contains two methods: up and down. The up method is used
+> to add new tables, columns, or indexes to your database, while the down method
+> should reverse the operations performed by the up method.
+>
+> --[Laravel](https://laravel.com/docs/5.8/migrations#generating-migrations)
+
+### Posts Migration
+
+_database/migrations/YYYY_MM_DD_hhmmss_create_posts_table.php_
+
+| Field     | command                                                                                                 |
+| --------- | ------------------------------------------------------------------------------------------------------- |
+| id        | `\$table->bigIncrements('id');`                                                                         |
+| author_id | `\$table->bigInteger('author_id')->unsigned();`                                                         |
+|           | `\$table->foreign('author_id')->referces('id')->on('users')->onUpdate('cascade')->onDelete('cascade');` |
+| title     | `\$table->string('title');`                                                                             |
+| content   | `\$table->text('content');`                                                                             |
+| delete_at | `\$table->softDeletes();`                                                                               |
+| create_at | `\$table->timestamps();`                                                                                |
+| update_at | `\$table->timestamps();`                                                                                |
+
+`php artisan migrate`
+
 # Environment
 
 -   php 7.3.3
