@@ -224,6 +224,27 @@ Route::get('/about', function () {
 Run `$ php artisan serve` and visit http://localhost:8000/about.
 You should see our html is rendered.
 
+## Laravel Makes Authentication Easy
+
+Laravel comes with migrations for users and password resets.
+To make a basic authentication system simply run:
+
+```php
+$ php artisan migrate
+```
+
+Another helpful artisan command makes routes and views for
+authentication and registration:
+
+```php
+$ php artisan make:auth
+```
+
+_With help of git, you can see what is done by `make:auth`._
+_You can also checkout this by `$ git show make-auth` in this repo._
+
+Now your app is ready for registration and authentication. Just that easy!
+
 # Environment
 
 -   php 7.3.3
