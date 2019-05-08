@@ -303,6 +303,41 @@ By convention, the "snake case", plural name of the class will be used as
 the table name. So, in this case, Eloquent will assume the Post model
 stores records in the posts table.
 
+## Build Up Blog Post functionality
+
+### Post Controller
+
+```sh
+$ php artisan make:controller PostController --resource --model=Post
+```
+
+### Resourceful Route
+
+Registe routes for resource controller
+
+```php
+Route::resource('posts', 'PostController');
+```
+
+To use only subset of actions of resourceful route
+
+```php
+Route::resource('posts', 'PostController')->only(['index', 'show']);
+Route::resource('posts', 'PostController')->except(['destroy']);
+```
+
+[Resource controller](https://laravel.com/docs/5.8/controllers#resource-controllers)
+
+| Verb      | URI                | Action  | Route Name    |
+| --------- | ------------------ | ------- | ------------- |
+| GET       | /posts             | index   | posts.index   |
+| GET       | /posts/create      | create  | posts.create  |
+| POST      | /posts             | store   | posts.store   |
+| GET       | /posts/{post}      | show    | posts.show    |
+| GET       | /posts/{post}/edit | edit    | posts.edit    |
+| PUT/PATCH | /posts/{post}      | update  | posts.update  |
+| DELETE    | /posts/{post}      | destroy | posts.destroy |
+
 # Environment
 
 -   php 7.3.3
