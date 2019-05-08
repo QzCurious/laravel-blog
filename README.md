@@ -280,6 +280,29 @@ _database/migrations/YYYY_MM_DD_hhmmss_create_posts_table.php_
 
 `php artisan migrate`
 
+### Post Model (Eloquent Model)
+
+> The Eloquent ORM included with Laravel provides a beautiful, simple
+> ActiveRecord implementation for working with your database.
+> Each database table has a corresponding "Model" which is used to
+> interact with that table. Models allow you to query for data in your tables,
+> as well as insert new records into the table.
+>
+> --[Laravel](https://laravel.com/docs/5.8/eloquent#introduction)
+
+```
+php artisan make:model Post
+```
+
+_You can generate model with migration at the same time by_
+_`php artisan make:model Post --migration`_
+
+#### Eloquent Model Conventions
+
+By convention, the "snake case", plural name of the class will be used as
+the table name. So, in this case, Eloquent will assume the Post model
+stores records in the posts table.
+
 # Environment
 
 -   php 7.3.3
