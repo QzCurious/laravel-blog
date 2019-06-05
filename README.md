@@ -338,12 +338,133 @@ Route::resource('posts', 'PostController')->except(['destroy']);
 | PUT/PATCH | /posts/{post}      | update  | posts.update  |
 | DELETE    | /posts/{post}      | destroy | posts.destroy |
 
+### Build Post CRUD
+
+#### Frontend Resources
+
+We will need bootstrap to build our frontend view. You are free to
+prune any package that not needed in _package.json_.
+
+Install javascript packages
+
+```sh
+$ npm install
+```
+
+[Laravel Mix](https://laravel.com/docs/5.8/mix) is included in
+_package.json_. I'm curious about how modern frondend techniques.
+So I will try to follow the steps I can find.
+
+_Laravel is built on top of Webpack._
+
+Compile frontend resources
+
+```sh
+$ npm run dev
+```
+
+Destinations for compiled resources is set by _webpack.mix.js_, which is the
+config file for Laravel Mix. Destination is specified by second argument of
+`js()` and `sass()`.
+
+Compiled resources are not needed to be include into VCS. So I'll add
+them into _.gitignore_.
+
+```.gitignore
+.gitignore
+----------
+
+# compiled resource
+/public/css/
+/public/js/
+/public/mix-manifest.json
+```
+
+But there is a problem, although I specified those files in _.gitignore_,
+`$ git status` still showing me those files. The reason is, Laravel project
+comes with those files, which are already tracked by git. So there is one
+more step to do - remove those files for this commit.
+
+```sh
+# --cache flag tells git remove indexed files only, not files in working directory
+$ git rm --cache -r /public/css/*
+$ git rm --cache -r /public/js/*
+```
+
+#### Post Routes
+
+I will explicitly declare all routes and follow resourceful route conventions
+for our posts. [#why](#why-explict-declare-all-routes-instead-of-use-resourceful-route)
+
+```php
+web.php
+-------
+
+use App\Http\Controllers\PostController;
+
+Route::get('/posts', [PostController::class, 'index']);
+Route::get('/posts/create', [PostController::class, 'create']);
+Route::post('/posts', [PostController::class, 'store']);
+Route::get('/posts/{post}', [PostController::class, 'show']);
+Route::get('/posts/{post}/edit', [PostController::class, 'edit']);
+Route::patch('/posts/{post}', [PostController::class, 'update']);
+Route::put('/posts/{post}', [PostController::class, 'replace']);
+Route::delete('/posts/{post}', [PostController::class, 'destory']);
+```
+
+##### Register Routes By Pass an Array As Callable
+
+Usually, a route is declared as `Route::get('/posts', 'PostController@index');`.
+There is another way to registering a route,
+[array as callable](https://www.php.net/manual/en/language.types.callable.php#language.types.callable.passing).
+~~Although it does not documented in Laravel official documentation, but is introduced
+[here](https://github.com/laravel/framework/pull/24385)~~. This syntax makes IDEs
+easy to navigate to code definition. One thing to notice, `::class` is a method,
+the class at this point should be understood by php. You can either import the
+class by `use` or specify a
+[full qualified name](https://www.php.net/manual/en/language.namespaces.basics.php).
+
+**One thing to notice:** The main perporse is to make the code more close to php.
+So that IDEs can understand and takes advantage of it.
+`RouteServiceProvider` assign a default namespace, `App\Http\Controllers` for
+each route. Using `Route::resource('posts', PostController::class)` would cause problem.
+
+#### Page for Create a Post
+
+Laravel comes with a _resources/views/layouts/app.blade.php_ blade file.
+I'll **extend** it for out posts view.
+
+Create view _resources/views/post/create.blade.php_ and let
+`PostController::create` load the view by:
+
+```php
+PostController.php
+------------------
+
+public function create()
+{
+    return view('posts.create');
+}
+```
+
+`view` function search file in _resources/views_. `.` or `/` represents
+directory structure.
+
+Blade directives to be aware of:
+
+-   {{ }}
+-   [@section](https://laravel.com/docs/5.8/blade#defining-a-layout)
+-   [@yield](https://laravel.com/docs/5.8/blade#defining-a-layout)
+-   [@extends](https://laravel.com/docs/5.8/blade#extending-a-layout)
+-   [@csrf](https://laravel.com/docs/5.8/blade#csrf-field)
+
 # Environment
 
 -   php 7.3.3
 -   composer 1.8.4
 -   laravel/laravel v5.8.3
 -   laravel/framework v5.8.10
+-   bootstrap v4.3.1
 
 # Notes
 
@@ -355,3 +476,52 @@ you with. It provides default structure for laravel project.
 The repository contains default config files, controllers, routes, etc. As well as
 code responsible for bootstrapping the application.
 And it requires laravel/framework as dependency.
+
+# Why
+
+## Why Explict Declare All Routes Instead of Use Resourceful Route
+
+-   We can use `where()` method to constrain route
+    parameters on normal routes (`Route::post()`).
+    I think it is a good practice to do it.
+    See also [How to constrain route parameters of resourceful route](#How-to-constrain-route-parameters-of-resourceful-route)
+-   I like use [array as callable] for a route.
+-   Routes for web and api are split to separate files.
+    Usually we don't declare an api routes in _web.php_, vice versa.
+    Using `Route::resource()` and `Route::apiResource()` is just a quick way
+    to declare routes. While `except()` or `only()` just
+    make things more complicate.
+
+# How
+
+## How to constrain route parameters of resourceful route
+
+First, name the parameter for a resourceful route:
+
+```php
+Route::resource('posts', 'PostController')->parameters([
+    // resource_name => parameter_name
+    'posts' => 'id'
+]);
+```
+
+Then define [global constrain](https://laravel.com/docs/5.8/routing#route-parameters):
+
+```php
+RouteServiceProvider.php
+------------------------
+
+public function boot()
+{
+    Route::pattern('id', '[0-9]+');
+
+    parent::boot();
+}
+```
+
+# TODO
+
+[Frontend Resources](#frontend-resources)
+
+-   Understand how resources are compiled
+-   [webpack tutorial](https://medium.com/a-beginners-guide-for-webpack-2)
