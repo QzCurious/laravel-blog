@@ -458,6 +458,23 @@ Blade directives to be aware of:
 -   [@extends](https://laravel.com/docs/5.8/blade#extending-a-layout)
 -   [@csrf](https://laravel.com/docs/5.8/blade#csrf-field)
 
+#### Page for List of Posts
+
+Create view _resources/views/post/index.blade.php_ and let
+`PostController::index` load the view by:
+
+```php
+PostController.php
+------------------
+
+public function index()
+{
+    $posts = Post::orderBy('created_at', 'desc')->get();
+
+    return view('post.index', compact('posts'));
+}
+```
+
 # Environment
 
 -   php 7.3.3
