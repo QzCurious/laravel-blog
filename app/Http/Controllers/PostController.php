@@ -43,11 +43,12 @@ class PostController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function show(Post $post)
+    public function show($post)
     {
-        //
+        $post = Post::find($post);
+        return view('post.show', compact('post'));
     }
 
     /**

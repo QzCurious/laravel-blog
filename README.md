@@ -475,6 +475,31 @@ public function index()
 }
 ```
 
+#### Page for a Post
+
+view: _resources/views/post/show.blade.php_
+
+```php
+PostController.php
+------------------
+
+public function show($post)
+{
+    $post = Post::find($post);
+    return view('post.show', compact('post'));
+}
+```
+
+Recall we declare a placeholder `{post}` in route:
+
+```php
+Route::get('/posts/{post}', [PostController::class, 'show']);
+```
+
+It's called [route parameter](https://laravel.com/docs/5.8/routing#route-parameters)
+A route parameter is encased within `{}`. Then it is passed to controller.
+We take it as id of a post.
+
 # Environment
 
 -   php 7.3.3
