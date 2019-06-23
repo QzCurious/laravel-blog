@@ -500,6 +500,45 @@ It's called [route parameter](https://laravel.com/docs/5.8/routing#route-paramet
 A route parameter is encased within `{}`. Then it is passed to controller.
 We take it as id of a post.
 
+##### Regular Expression Constraints On Route Parameter
+
+We know we use the route parameter `$post` for id of
+a post. But the logic is just known by us. User can
+type anything he/she want. So it a good practice to
+restrict the form of route parameters.
+
+```php
+Route::get('/posts/{post}', [PostController::class, 'show'])->where('post', '[0-9]+');
+```
+
+We can use the `where()` method on a route instance.
+`where()` takes two arguments. Name of route parameter,
+and an regular expression defining how the parameter
+should be constrain.
+
+###### Resolve Unwanted Exception Caused by Constrain of Route Parameter
+
+If you access _/posts/abc_ from browser, an exception might be produced:
+![MethodNotAllowedHttpException](public/images/MethodNotAllowedHttpException.png)
+
+I'm not sure why Laravel throw this exception without handle it. As described
+in the documentation,
+[it should fallback to 404](https://laravel.com/docs/5.8/routing#fallback-routes)
+though.
+
+To resolve this, just manually add `Route::fallback()` to end of
+_routes/web.php_. And raise an
+[http exception](https://laravel.com/docs/5.8/errors#http-exceptions).
+
+```php
+routes/web.php
+--------------
+
+Route::fallback(function () {
+    abort(404);
+});
+```
+
 # Environment
 
 -   php 7.3.3
