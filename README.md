@@ -539,6 +539,37 @@ Route::fallback(function () {
 });
 ```
 
+##### Route Model Binding
+
+Before using route model binding, we need to be aware of
+[dependency injection for controllers](https://laravel.com/docs/5.8/controllers#dependency-injection-and-controllers).
+Briefly speaking, [service container](https://laravel.com/docs/5.8/container)
+resolve all laravel controllers by
+[Reflection](https://www.php.net/manual/en/book.reflection.php). So it is able
+to create an object for type-hinted parameter of a controller.
+
+In `PostController#show()` we need to obtain a `Post` instance. Instead of
+create it manually, we can type hint `Post` for a parameter. Service container
+will resolve and pass it for us.
+
+Further, if a parameter is named after route parameter and is type-hinted as
+Eloquent model, laravel will take the route parameter as id and inject a model
+matches the given id.
+
+Now we can simply:
+
+```php
+PostController.php
+------------------
+
+use App\Post;
+
+public function show(Post $post)
+{
+    return view('post.show', compact('post'));
+}
+```
+
 # Environment
 
 -   php 7.3.3

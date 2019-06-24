@@ -45,9 +45,8 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\View\View
      */
-    public function show($post)
+    public function show(Post $post)
     {
-        $post = Post::find($post);
         return view('post.show', compact('post'));
     }
 
